@@ -6,9 +6,9 @@ public class Product {
     private final String name;
     private final int price;
     private int quantity;
-    private final String promotion;
+    private final Promotion promotion;
 
-    public Product(String name, String price, String stock, String promotion) {
+    public Product(String name, String price, String stock, Promotion promotion) {
         this.name = name;
         this.price = Integer.parseInt(price);
         this.quantity = Integer.parseInt(stock);
