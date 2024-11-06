@@ -15,3 +15,5 @@ name,price,quantity,promotion
 정식도시락,6400,8,null
 컵라면,1700,1,MD추천상품
 컵라면,1700,10,null
+효택도시락,5000,10,MD추천상품
+효택도시락,5000,3,null

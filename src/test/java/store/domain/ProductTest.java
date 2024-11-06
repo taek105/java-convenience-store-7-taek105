@@ -2,11 +2,27 @@ package store.domain;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProductTest {
     Promotions promotions = new Promotions();
     Products products = new Products(promotions);
+
+    public ProductTest() throws IOException {}
+
+    @Test
+    void 상품_출력_테스트() {
+        for ( Product product : products.getProducts() ) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(product.getName()).append(", ").
+                    append(product.getPrice()).append(", ").
+                    append(product.getQuantity()).append(", ").
+                    append(product.getPromotion().getName()).append(", ");
+            System.out.println(sb);
+        }
+    }
 
     @Test
     void 결제_가능_테스트() {
@@ -35,7 +51,7 @@ public class ProductTest {
         int howMuchBought = 2;
         Product water = products.getProduct(name);
 
-        water.selled(howMuchBought);
+        water.sold(howMuchBought);
 
         assertEquals(8, water.getQuantity());
     }
