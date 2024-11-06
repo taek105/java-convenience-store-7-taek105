@@ -1,6 +1,6 @@
 package store.constant;
 
-public enum Constants {
+public enum Constant {
     PRODUCT_NAME_INDEX(0),
     PRODUCT_PRICE_INDEX(1),
     PRODUCT_QUANTITY_INDEX(2),
@@ -16,7 +16,7 @@ public enum Constants {
 
     private final int value;
 
-    Constants(int constant) {
+    Constant(int constant) {
         this.value = constant;
     }
 
