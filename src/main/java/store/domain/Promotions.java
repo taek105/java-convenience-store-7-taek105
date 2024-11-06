@@ -3,7 +3,6 @@ package store.domain;
 import store.constant.Constant;
 import store.constant.ErrorMessage;
 import store.util.Util;
-import store.util.Validate;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -39,7 +38,9 @@ public class Promotions {
 
     private Promotion parsePromotion(String line) {
         String[] split = line.split(",");
-        Validate.parsePromotion(split);
+        if ( split.length != Constant.PROMOTION_END_DATE_INDEX.getValue()+1 ) {
+            throw new IllegalArgumentException(ErrorMessage.NOT_VALID_FILE_FORMAT.getMessages());
+        }
 
         return new Promotion(split[Constant.PROMOTION_NAME_INDEX.getValue()],
                 (split[Constant.PROMOTION_BUY_INDEX.getValue()]),

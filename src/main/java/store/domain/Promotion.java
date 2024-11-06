@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 import java.time.Month;
 
 public class Promotion {
-    String name;
-    int buy;
-    int get;
-    LocalDateTime startDate;
-    LocalDateTime endDate;
+    private final String name;
+    private final int buy;
+    private final int get;
+    private final LocalDateTime startDate;
+    private final LocalDateTime endDate;
 
     public Promotion(String name, String buy, String get,
                      String startDate, String endDate) {
@@ -35,17 +35,21 @@ public class Promotion {
         return name;
     }
 
-    public LocalDateTime getStartDate() {
-        return startDate;
+    public int getBuy() {
+        return buy;
     }
 
-    public LocalDateTime getEndDate() {
-        return endDate;
+    public int getGet() {
+        return get;
     }
 
     public boolean isPromotionNow() {
         LocalDateTime now = DateTimes.now();
         return now.isAfter(startDate) && now.isBefore(endDate);
+    }
+
+    public boolean isPromotion() {
+        return !(this.name.equals("null") && this.buy == 0 && this.get == 0);
     }
 
     public static Promotion nullPromotion() {

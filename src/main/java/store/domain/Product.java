@@ -1,5 +1,6 @@
 package store.domain;
 
+import store.constant.Constant;
 import store.constant.ErrorMessage;
 
 public class Product {
@@ -8,10 +9,10 @@ public class Product {
     private int quantity;
     private final Promotion promotion;
 
-    public Product(String name, String price, String stock, Promotion promotion) {
+    public Product(String name, String price, String quantity, Promotion promotion) {
         this.name = name;
         this.price = Integer.parseInt(price);
-        this.quantity = Integer.parseInt(stock);
+        this.quantity = Integer.parseInt(quantity);
         this.promotion = promotion;
     }
 
@@ -28,7 +29,26 @@ public class Product {
     }
 
     public Promotion getPromotion() {
-        return promotion;
+        return this.promotion;
+    }
+
+    public static Product emptyProduct() {
+        return new Product("",
+                Integer.toString(Constant.EMPTY_PRODUCT_PRICE.getValue()),
+                "0",
+                Promotion.nullPromotion());
+    }
+
+    public boolean isEmpty() {
+        return this.price == Constant.EMPTY_PRODUCT_PRICE.getValue();
+    }
+
+    public boolean isPromotionNow() {
+        return promotion.isPromotionNow();
+    }
+
+    public boolean isPromotion() {
+        return promotion.isPromotion();
     }
 
     public boolean isSellable(int quantity) {

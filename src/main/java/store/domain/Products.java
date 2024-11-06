@@ -3,12 +3,12 @@ package store.domain;
 import store.constant.Constant;
 import store.constant.ErrorMessage;
 import store.util.Util;
-import store.util.Validate;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Products {
@@ -39,7 +39,9 @@ public class Products {
 
     private Product parseProduct(String line, Promotions promotions) {
         String[] split = line.split(",");
-        Validate.parseProduct(split);
+        if ( split.length != Constant.PRODUCT_PROMOTION_INDEX.getValue()+1 ) {
+            throw new IllegalArgumentException(ErrorMessage.NOT_VALID_FILE_FORMAT.getMessages());
+        }
 
         return new Product(split[Constant.PRODUCT_NAME_INDEX.getValue()],
                         (split[Constant.PRODUCT_PRICE_INDEX.getValue()]),
@@ -47,16 +49,24 @@ public class Products {
                 promotions.getPromotion(split[Constant.PRODUCT_PROMOTION_INDEX.getValue()]));
     }
 
-    public Product getProduct(String name) {
+    public final Product getProduct(String name) {
+        if ( getProduct(name, true).isEmpty() ) {
+            return getProduct(name, true);
+        }
+
+        return getProduct(name, false);
+    }
+
+    public final Product getProduct(String name, boolean isPromotion) {
         for (Product product : products) {
-            if (product.getName().equals(name)) {
+            if (product.getName().equals(name) && product.isPromotion() == isPromotion) {
                 return product;
             }
         }
-        throw new IllegalArgumentException(ErrorMessage.NOT_EXISTENCE_PRODUCT.getMessages());
+        return Product.emptyProduct();
     }
 
-    public List<Product> getProducts() {
-        return products;
+    public List<Product> getProductsList() {
+        return Collections.unmodifiableList(products);
     }
 }

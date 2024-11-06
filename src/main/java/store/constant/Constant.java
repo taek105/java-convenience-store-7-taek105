@@ -12,7 +12,8 @@ public enum Constant {
     PROMOTION_END_DATE_INDEX(4),
     YEAR_INDEX(0),
     MONTH_INDEX(1),
-    DAY_INDEX(2);
+    DAY_INDEX(2),
+    EMPTY_PRODUCT_PRICE(-1);
 
     private final int value;
 
