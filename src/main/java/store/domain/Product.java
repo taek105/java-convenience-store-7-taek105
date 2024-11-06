@@ -27,14 +27,18 @@ public class Product {
         return quantity;
     }
 
-    public boolean isSellable(int howMuchSelled) {
-        return quantity >= howMuchSelled;
+    public Promotion getPromotion() {
+        return promotion;
     }
 
-    public void selled(int howMuchSelled) {
-        if ( !isSellable(howMuchSelled) ) {
+    public boolean isSellable(int quantity) {
+        return this.quantity >= quantity;
+    }
+
+    public void sold(int quantity) {
+        if ( !isSellable(quantity) ) {
             throw new IllegalArgumentException(ErrorMessage.EXCEED_QUANTITY.getMessages());
         }
-        this.quantity -= howMuchSelled;
+        this.quantity -= quantity;
     }
 }

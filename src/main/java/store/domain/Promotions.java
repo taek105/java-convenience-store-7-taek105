@@ -1,8 +1,9 @@
 package store.domain;
 
-import store.constant.Constants;
+import store.constant.Constant;
 import store.constant.ErrorMessage;
-import store.util.Utils;
+import store.util.Util;
+import store.util.Validate;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,20 +16,20 @@ public class Promotions {
 
     public Promotions() {
         this.promotions = new ArrayList<>();
-        init();
+        readFile();
     }
 
-    private void init() {
+    private void readFile() {
         try {
             FileReader fr = new FileReader("src/main/resources/promotions.md");
-            readFile(new BufferedReader(fr));
+            parseFile(new BufferedReader(fr));
         } catch (IOException e) {
-            throw new IllegalArgumentException(ErrorMessage.NOT_VALID_FILEROUTE.getMessages());
+            throw new IllegalArgumentException(ErrorMessage.NOT_VALID_FILE_ROUTE.getMessages());
         }
     }
 
-    private void readFile(BufferedReader br) throws IOException {
-        Utils.skipFirstLine(br);
+    private void parseFile(BufferedReader br) throws IOException {
+        Util.skipFirstLine(br);
 
         String line;
         while ( (line = br.readLine()) != null ) {
@@ -38,12 +39,13 @@ public class Promotions {
 
     private Promotion parsePromotion(String line) {
         String[] split = line.split(",");
+        Validate.parsePromotion(split);
 
-        return new Promotion(split[Constants.PROMOTION_NAME_INDEX.getValue()],
-                (split[Constants.PROMOTION_BUY_INDEX.getValue()]),
-                (split[Constants.PROMOTION_GET_INDEX.getValue()]),
-                (split[Constants.PROMOTION_START_DATE_INDEX.getValue()]),
-                (split[Constants.PROMOTION_END_DATE_INDEX.getValue()]));
+        return new Promotion(split[Constant.PROMOTION_NAME_INDEX.getValue()],
+                (split[Constant.PROMOTION_BUY_INDEX.getValue()]),
+                (split[Constant.PROMOTION_GET_INDEX.getValue()]),
+                (split[Constant.PROMOTION_START_DATE_INDEX.getValue()]),
+                (split[Constant.PROMOTION_END_DATE_INDEX.getValue()]));
     }
 
     public Promotion getPromotion(String promotionName) {

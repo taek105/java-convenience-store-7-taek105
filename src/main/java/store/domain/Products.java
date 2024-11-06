@@ -1,8 +1,9 @@
 package store.domain;
 
-import store.constant.Constants;
+import store.constant.Constant;
 import store.constant.ErrorMessage;
-import store.util.Utils;
+import store.util.Util;
+import store.util.Validate;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,23 +14,23 @@ import java.util.List;
 public class Products {
     private final List<Product> products;
 
-    public Products(Promotions promotions) {
+    public Products(Promotions promotions) throws IOException {
         products = new ArrayList<>();
-        init(promotions);
+        readFile(promotions);
     }
 
-    private void init(Promotions promotions) {
+    private void readFile(Promotions promotions) throws IOException {
+        FileReader fr;
         try {
-            FileReader fr = new FileReader("src/main/resources/products.md");
-            readFile(new BufferedReader(fr), promotions);
+            fr = new FileReader("src/main/resources/products.md");
         } catch (IOException e) {
-            throw new IllegalArgumentException(ErrorMessage.NOT_VALID_FILEROUTE.getMessages());
+            throw new IllegalArgumentException(ErrorMessage.NOT_VALID_FILE_ROUTE.getMessages());
         }
+        parseFile(new BufferedReader(fr), promotions);
     }
 
-    private void readFile(BufferedReader br, Promotions promotions) throws IOException {
-        Utils.skipFirstLine(br);
-
+    private void parseFile(BufferedReader br, Promotions promotions) throws IOException {
+        Util.skipFirstLine(br);
         String line;
         while ( (line = br.readLine()) != null ) {
             products.add(parseProduct(line, promotions));
@@ -38,10 +39,12 @@ public class Products {
 
     private Product parseProduct(String line, Promotions promotions) {
         String[] split = line.split(",");
-        return new Product(split[Constants.PRODUCT_NAME_INDEX.getValue()],
-                        (split[Constants.PRODUCT_PRICE_INDEX.getValue()]),
-                        (split[Constants.PRODUCT_QUANTITY_INDEX.getValue()]),
-                promotions.getPromotion(split[Constants.PRODUCT_PROMOTION_INDEX.getValue()]));
+        Validate.parseProduct(split);
+
+        return new Product(split[Constant.PRODUCT_NAME_INDEX.getValue()],
+                        (split[Constant.PRODUCT_PRICE_INDEX.getValue()]),
+                        (split[Constant.PRODUCT_QUANTITY_INDEX.getValue()]),
+                promotions.getPromotion(split[Constant.PRODUCT_PROMOTION_INDEX.getValue()]));
     }
 
     public Product getProduct(String name) {
@@ -54,6 +57,6 @@ public class Products {
     }
 
     public List<Product> getProducts() {
-        return this.products;
+        return products;
     }
 }

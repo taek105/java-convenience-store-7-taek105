@@ -1,7 +1,7 @@
 package store.domain;
 
 import camp.nextstep.edu.missionutils.DateTimes;
-import store.constant.Constants;
+import store.constant.Constant;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -24,9 +24,9 @@ public class Promotion {
 
     private LocalDateTime parseLocalDateTime(String startDate) {
         String[] parts = startDate.split("-");
-        return LocalDateTime.of(Integer.parseInt(parts[Constants.YEAR_INDEX.getValue()]),
-                Month.of(Integer.parseInt(parts[Constants.MONTH_INDEX.getValue()])),
-                Integer.parseInt(parts[Constants.DAY_INDEX.getValue()]),
+        return LocalDateTime.of(Integer.parseInt(parts[Constant.YEAR_INDEX.getValue()]),
+                Month.of(Integer.parseInt(parts[Constant.MONTH_INDEX.getValue()])),
+                Integer.parseInt(parts[Constant.DAY_INDEX.getValue()]),
                 0,
                 0);
     }
