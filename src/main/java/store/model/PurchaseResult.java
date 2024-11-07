@@ -35,6 +35,10 @@ public class PurchaseResult {
         this.purchaseCount += amount;
     }
 
+    public void addAmount(int amount) {
+        this.amount += amount;
+    }
+
     public void subtractAmount(int amount) {
         this.amount -= amount;
     }

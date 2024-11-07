@@ -1,21 +1,19 @@
 package store.service;
 
-import camp.nextstep.edu.missionutils.Console;
 import store.constant.ErrorMessage;
 import store.domain.Product;
 import store.domain.Products;
 import store.model.PurchaseResult;
-import store.view.InputView;
 import store.view.OutputView;
 
 public class ConvenienceService {
+    PromotionService promotionService;
     Products products;
-    InputView inputView;
     OutputView outputView;
 
     public ConvenienceService(Products products) {
+        this.promotionService = new PromotionService(products);
         this.products = products;
-        this.inputView = new InputView();
         this.outputView = new OutputView();
     }
 
@@ -25,42 +23,13 @@ public class ConvenienceService {
         validate(amount, promoteProduct, justProduct);
 
         PurchaseResult purchaseResult = new PurchaseResult(amount);
-
-        promotionQuantityCheck(promoteProduct, purchaseResult);
-//        if ( amount % )
+        promotionService.promotionQuantityCheck(promoteProduct, purchaseResult);
+        promotionService.askServeExtraProduct(purchaseResult, promoteProduct);
 
         promoteProductPurchase(promoteProduct, purchaseResult);
         justProductPurchase(justProduct, purchaseResult);
 
         return purchaseResult.getPayAmount();
-    }
-
-    private void promotionQuantityCheck(Product promoteProduct, PurchaseResult purchaseResult) {
-        if ( purchaseResult.getAmount() > promoteProduct.getQuantity() ) {
-            notifyLackPromotionQuantity(promoteProduct, purchaseResult);
-        }
-    }
-
-    private void notifyLackPromotionQuantity(Product promoteProduct, PurchaseResult purchaseResult) {
-        int lackAmount = getLackAmount(promoteProduct, purchaseResult.getAmount());
-        inputView.notifyPromotionQuantity(promoteProduct.getName(), lackAmount);
-        String input = Console.readLine();
-
-        if (input.equals("N")) {
-            purchaseResult.subtractAmount(lackAmount);
-        }
-    }
-
-    private int getLackAmount(Product promoteProduct, int amount) {
-        int buy = promoteProduct.getPromotion().getBuy();
-        int get = promoteProduct.getPromotion().getGet();
-        int lackAmount;
-        if (buy + get > promoteProduct.getQuantity()) {
-            lackAmount = amount - promoteProduct.getQuantity();
-        } else {
-            lackAmount = amount - ((promoteProduct.getQuantity() / (buy + get)) * (buy + get));
-        }
-        return lackAmount;
     }
 
     private void promoteProductPurchase(Product promoteProduct, PurchaseResult purchaseResult) {
@@ -71,50 +40,28 @@ public class ConvenienceService {
 
             promotionCheck(promoteProduct, purchaseResult);
         }
-
         promoteProduct.sold(purchaseResult.getPurchaseCount());
     }
 
     private void promotionCheck(Product promoteProduct, PurchaseResult purchaseResult) {
         int purchaseCount = purchaseResult.getPurchaseCount();
         if ( purchaseCount % promoteProduct.getPromotion().getBuy() == 0 ){
-//            boolean promotionApply = notifyPromotion(promoteProduct, purchaseResult);
-            int promotionGet = promotionGet(promoteProduct, purchaseResult, true);
+            int promotionGet = promotionGet(promoteProduct, purchaseResult);
 
             purchaseResult.addPurchaseCount(promotionGet);
         }
     }
 
-    private int promotionGet(Product promoteProduct, PurchaseResult purchaseResult, boolean promotionApply) {
+    private int promotionGet(Product promoteProduct, PurchaseResult purchaseResult) {
         int promoteProductQuantity = promoteProduct.getQuantity();
         int promotionGet = promoteProduct.getPromotion().getGet();
         int purchaseCount = purchaseResult.getPurchaseCount();
 
-        if ( promotionApply ){
-            if (promoteProductQuantity-purchaseResult.getPurchaseCount() < promotionGet) {
-                // 프로모션 적용으로 얻을 수 있는 상품 개수는 프로모션 재고 이내일 수 있게
-                return promoteProductQuantity - purchaseCount;
-            }
-            return promotionGet;
-        }
         if (promoteProductQuantity-purchaseResult.getPurchaseCount() < promotionGet) {
             // 프로모션 적용으로 얻을 수 있는 상품 개수는 프로모션 재고 이내일 수 있게
             return promoteProductQuantity - purchaseCount;
         }
         return purchaseCount - purchaseResult.getAmount();
-    }
-
-    private boolean notifyPromotion(Product promoteProduct, PurchaseResult purchaseResult) {
-        if ( purchaseResult.getAmount()
-                < (purchaseResult.getPurchaseCount() + promoteProduct.getPromotion().getGet()) ) {
-            inputView.notifyPromotion(promoteProduct.getName(), promoteProduct.getPromotion().getGet());
-            String input = Console.readLine();
-
-            if ( input.equals("Y") ) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void justProductPurchase(Product justProduct, PurchaseResult purchaseResult) {
@@ -125,7 +72,6 @@ public class ConvenienceService {
             purchaseResult.incrementPurchaseCount();
             purchaseResult.addPayAmount(justProduct.getPrice());
         }
-
         justProduct.sold(amount);
     }
 

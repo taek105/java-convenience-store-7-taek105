@@ -23,7 +23,7 @@ public class InputView {
         System.out.println(sb);
     }
 
-    public void notifyPromotion(String productName, int promotionGet) {
+    public void notifyExtraProducts(String productName, int promotionGet) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("현재 ");
