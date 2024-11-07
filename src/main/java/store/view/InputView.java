@@ -9,5 +9,16 @@ public class InputView {
         // ...
         return input;
     }
-    // ...
+
+    public void readPromotion(String productName, int promotionGet) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("현재 ");
+        sb.append(productName);
+        sb.append("은(는) ");
+        sb.append(promotionGet);
+        sb.append("개를 무료로 받을 수 있습니다. 추가하시겠습니까? (Y/N)");
+
+        System.out.println(sb);
+    }
 }
