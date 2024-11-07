@@ -1,45 +1,39 @@
 package store.model;
 
 public class PurchaseResult {
-    private int amount;
-    private int payAmount;
-    private int purchaseCount;
+    private final String name;
+    private final int amount;
+    private final int extraAmount;
+    private final int promotedPrice;
 
-    public PurchaseResult(int amount) {
+    public PurchaseResult(String name, int amount, int extraAmount, int promotedPrice) {
+        this.name = name;
         this.amount = amount;
-        this.payAmount = 0;
-        this.purchaseCount = 0;
+        this.extraAmount = extraAmount;
+        this.promotedPrice = promotedPrice;
     }
 
-    public int getPayAmount() {
-        return payAmount;
-    }
-
-    public int getPurchaseCount() {
-        return purchaseCount;
+    public String getName() {
+        return name;
     }
 
     public int getAmount() {
         return amount;
     }
 
-    public void incrementPurchaseCount() {
-        this.purchaseCount++;
+    public int getExtraAmount() {
+        return extraAmount;
     }
 
-    public void addPayAmount(int amount) {
-        this.payAmount += amount;
+    public int getPromotedPrice() {
+        return promotedPrice;
     }
 
-    public void addPurchaseCount(int amount) {
-        this.purchaseCount += amount;
+    public int getPrice() {
+        return promotedPrice/(amount-extraAmount);
     }
 
-    public void addAmount(int amount) {
-        this.amount += amount;
-    }
-
-    public void subtractAmount(int amount) {
-        this.amount -= amount;
+    public int getPromotionKeep() {
+        return getPrice()*extraAmount;
     }
 }

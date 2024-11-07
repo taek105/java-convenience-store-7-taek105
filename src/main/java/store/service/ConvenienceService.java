@@ -3,76 +3,87 @@ package store.service;
 import store.constant.ErrorMessage;
 import store.domain.Product;
 import store.domain.Products;
+import store.domain.Promotions;
+import store.model.PurchaseDTO;
 import store.model.PurchaseResult;
+import store.model.Receipt;
 import store.view.OutputView;
+
+import java.io.IOException;
 
 public class ConvenienceService {
     PromotionService promotionService;
     Products products;
-    OutputView outputView;
+    Receipt receipt;
 
-    public ConvenienceService(Products products) {
+    public ConvenienceService() throws IOException {
+        this.products = new Products(new Promotions());
         this.promotionService = new PromotionService(products);
-        this.products = products;
-        this.outputView = new OutputView();
+        this.receipt = new Receipt();
     }
 
-    public int purchase(String productName, int amount) {
-        Product promoteProduct = products.getProduct(productName, true);
-        Product justProduct = products.getProduct(productName, false);
+    public void open() {
+        OutputView.printWelcome();
+        OutputView.printProducts(products);
+    }
+
+    public PurchaseDTO purchase(String name, int amount) {
+        Product promoteProduct = products.getProduct(name, true);
+        Product justProduct = products.getProduct(name, false);
         validate(amount, promoteProduct, justProduct);
 
-        PurchaseResult purchaseResult = new PurchaseResult(amount);
-        promotionService.promotionQuantityCheck(promoteProduct, purchaseResult);
-        promotionService.askServeExtraProduct(purchaseResult, promoteProduct);
+        PurchaseDTO purchaseDTO = new PurchaseDTO(amount);
 
-        promoteProductPurchase(promoteProduct, purchaseResult);
-        justProductPurchase(justProduct, purchaseResult);
+        promoteProductPurchase(promoteProduct, purchaseDTO);
+        justProductPurchase(justProduct, purchaseDTO);
 
-        return purchaseResult.getPayAmount();
+        receipt.add(new PurchaseResult(name, purchaseDTO.getAmount(), purchaseDTO.getExtraAmount(), purchaseDTO.getPromotedPrice()));
+        return purchaseDTO;
     }
 
-    private void promoteProductPurchase(Product promoteProduct, PurchaseResult purchaseResult) {
-        while ( purchaseResult.getPurchaseCount() < promoteProduct.getQuantity()
-                && purchaseResult.getPurchaseCount() < purchaseResult.getAmount()) {
-            purchaseResult.incrementPurchaseCount();
-            purchaseResult.addPayAmount(promoteProduct.getPrice());
-
-            promotionCheck(promoteProduct, purchaseResult);
+    private void promoteProductPurchase(Product promoteProduct, PurchaseDTO purchaseDTO) {
+        if ( promoteProduct.isEmpty() ) {
+            return;
         }
-        promoteProduct.sold(purchaseResult.getPurchaseCount());
-    }
+        promotionService.promotionQuantityCheck(promoteProduct, purchaseDTO);
+        promotionService.askServeExtraProduct(promoteProduct, purchaseDTO);
 
-    private void promotionCheck(Product promoteProduct, PurchaseResult purchaseResult) {
-        int purchaseCount = purchaseResult.getPurchaseCount();
-        if ( purchaseCount % promoteProduct.getPromotion().getBuy() == 0 ){
-            int promotionGet = promotionGet(promoteProduct, purchaseResult);
+        while ( purchaseDTO.getPurchaseCount() < promoteProduct.getQuantity()
+                && purchaseDTO.getPurchaseCount() < purchaseDTO.getAmount()) {
+            purchaseDTO.incrementPurchaseCount();
+            purchaseDTO.addPayAmount(promoteProduct.getPrice());
 
-            purchaseResult.addPurchaseCount(promotionGet);
+            promotionService.promotionCheck(promoteProduct, purchaseDTO);
         }
+
+        promoteProduct.sold(purchaseDTO.getPurchaseCount());
     }
 
-    private int promotionGet(Product promoteProduct, PurchaseResult purchaseResult) {
-        int promoteProductQuantity = promoteProduct.getQuantity();
-        int promotionGet = promoteProduct.getPromotion().getGet();
-        int purchaseCount = purchaseResult.getPurchaseCount();
-
-        if (promoteProductQuantity-purchaseResult.getPurchaseCount() < promotionGet) {
-            // 프로모션 적용으로 얻을 수 있는 상품 개수는 프로모션 재고 이내일 수 있게
-            return promoteProductQuantity - purchaseCount;
+    private void justProductPurchase(Product justProduct, PurchaseDTO purchaseDTO) {
+        if ( justProduct.isEmpty() ) {
+            return;
         }
-        return purchaseCount - purchaseResult.getAmount();
-    }
-
-    private void justProductPurchase(Product justProduct, PurchaseResult purchaseResult) {
         int amount = 0;
         while ( amount < justProduct.getQuantity()
-                && purchaseResult.getPurchaseCount() < purchaseResult.getAmount()) {
+                && purchaseDTO.getPurchaseCount() < purchaseDTO.getAmount()) {
             amount++;
-            purchaseResult.incrementPurchaseCount();
-            purchaseResult.addPayAmount(justProduct.getPrice());
+            purchaseDTO.incrementPurchaseCount();
+            purchaseDTO.addPayAmount(justProduct.getPrice());
         }
+
         justProduct.sold(amount);
+    }
+
+    public void membership(boolean flag) {
+        if ( flag ) {
+            receipt.membership();
+        }
+    }
+
+    public void getReceipt() {
+        OutputView.printReceipt(receipt);
+
+
     }
 
     private static void validate(int amount, Product promoteProduct, Product justProduct) {

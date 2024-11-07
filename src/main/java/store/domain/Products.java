@@ -50,7 +50,7 @@ public class Products {
     }
 
     public final Product getProduct(String name) {
-        if ( getProduct(name, true).isEmpty() ) {
+        if ( !getProduct(name, true).isEmpty() ) {
             return getProduct(name, true);
         }
 

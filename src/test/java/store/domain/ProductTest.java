@@ -10,43 +10,43 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ProductTest {
     Promotions promotions = new Promotions();
     Products products = new Products(promotions);
-    OutputView outputView = new OutputView();
 
     public ProductTest() throws IOException {}
 
     @Test
-    void 상품_출력_테스트() {
-        outputView.printProducts(products);
+    void print_Test() {
+        OutputView.printProducts(products);
     }
 
     @Test
     void 결제_가능_테스트() {
         String name = "물";
-        int howMuchBought = 2;
+        int amount = 2;
 
         Product water = products.getProduct(name);
-        assertEquals(true, water.isSellable(howMuchBought));
+        System.out.println(water.getName());
+        assertEquals(true, water.isSellable(amount));
     }
 
     @Test
     void 결제_불가능_테스트() {
         String name = "물";
 
-        int howMuchBought = 11;
+        int amount = 11;
 
         Product water = products.getProduct(name);
 
-        assertEquals(false, water.isSellable(howMuchBought));
+        assertEquals(false, water.isSellable(amount));
     }
 
     @Test
     void 구매_테스트() {
         String name = "물";
 
-        int howMuchBought = 2;
+        int amount = 2;
         Product water = products.getProduct(name);
 
-        water.sold(howMuchBought);
+        water.sold(amount);
 
         assertEquals(8, water.getQuantity());
     }

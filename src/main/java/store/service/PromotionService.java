@@ -3,26 +3,52 @@ package store.service;
 import camp.nextstep.edu.missionutils.Console;
 import store.domain.Product;
 import store.domain.Products;
-import store.model.PurchaseResult;
+import store.model.PurchaseDTO;
 import store.view.InputView;
 
 public class PromotionService {
     Products products;
-    InputView inputView;
 
     public PromotionService(Products products) {
         this.products = products;
-        this.inputView = new InputView();
     }
 
-    public void askServeExtraProduct(PurchaseResult purchaseResult, Product promoteProduct) {
-        int extraProductAmount = ExtraProductAmount(purchaseResult.getAmount(), promoteProduct);
+    public void promotionQuantityCheck(Product promoteProduct, PurchaseDTO purchaseDTO) {
+        if ( purchaseDTO.getAmount() > promoteProduct.getQuantity() ) {
+            notifyLackPromotionQuantity(promoteProduct, purchaseDTO);
+        }
+    }
+
+    private void notifyLackPromotionQuantity(Product promoteProduct, PurchaseDTO purchaseDTO) {
+        int lackAmount = getLackAmount(promoteProduct, purchaseDTO.getAmount());
+        InputView.notifyPromotionQuantity(promoteProduct.getName(), lackAmount);
+        String input = Console.readLine();
+
+        if (input.equals("N")) {
+            purchaseDTO.subtractAmount(lackAmount);
+        }
+    }
+
+    private int getLackAmount(Product promoteProduct, int amount) {
+        int buy = promoteProduct.getPromotion().getBuy();
+        int get = promoteProduct.getPromotion().getGet();
+        int lackAmount;
+        if (buy + get > promoteProduct.getQuantity()) {
+            lackAmount = amount - promoteProduct.getQuantity();
+        } else {
+            lackAmount = amount - ((promoteProduct.getQuantity() / (buy + get)) * (buy + get));
+        }
+        return lackAmount;
+    }
+
+    public void askServeExtraProduct(Product promoteProduct, PurchaseDTO purchaseDTO) {
+        int extraProductAmount = ExtraProductAmount(purchaseDTO.getAmount(), promoteProduct);
         if ( extraProductAmount > 0 ) {
-            inputView.notifyExtraProducts(promoteProduct.getName(), extraProductAmount);
+            InputView.notifyExtraProducts(promoteProduct.getName(), extraProductAmount);
             String input = Console.readLine();
 
             if ( input.equals("Y") ) {
-                purchaseResult.addAmount(extraProductAmount);
+                purchaseDTO.addAmount(extraProductAmount);
             }
         }
     }
@@ -39,31 +65,25 @@ public class PromotionService {
         return 0;
     }
 
-    public void promotionQuantityCheck(Product promoteProduct, PurchaseResult purchaseResult) {
-        if ( purchaseResult.getAmount() > promoteProduct.getQuantity() ) {
-            notifyLackPromotionQuantity(promoteProduct, purchaseResult);
+    public void promotionCheck(Product promoteProduct, PurchaseDTO purchaseDTO) {
+        int purchaseCount = purchaseDTO.getPurchaseCount();
+
+        if ( ((purchaseCount - promoteProduct.getPromotion().getBuy()) % 3) == 0 ) {
+            int promotionGet = promotionGet(promoteProduct, purchaseDTO);
+            purchaseDTO.addPurchaseCount(promotionGet);
+            purchaseDTO.addExtraAmount(promotionGet);
         }
     }
 
-    private void notifyLackPromotionQuantity(Product promoteProduct, PurchaseResult purchaseResult) {
-        int lackAmount = getLackAmount(promoteProduct, purchaseResult.getAmount());
-        inputView.notifyPromotionQuantity(promoteProduct.getName(), lackAmount);
-        String input = Console.readLine();
+    private int promotionGet(Product promoteProduct, PurchaseDTO purchaseDTO) {
+        int promoteProductQuantity = promoteProduct.getQuantity();
+        int promotionGet = promoteProduct.getPromotion().getGet();
+        int purchaseCount = purchaseDTO.getPurchaseCount();
 
-        if (input.equals("N")) {
-            purchaseResult.subtractAmount(lackAmount);
+        if (promoteProductQuantity < promotionGet + purchaseCount) {
+            // 프로모션 적용으로 얻을 수 있는 상품 개수는 프로모션 재고 이내일 수 있게
+            return promoteProductQuantity - purchaseCount;
         }
-    }
-
-    private int getLackAmount(Product promoteProduct, int amount) {
-        int buy = promoteProduct.getPromotion().getBuy();
-        int get = promoteProduct.getPromotion().getGet();
-        int lackAmount;
-        if (buy + get > promoteProduct.getQuantity()) {
-            lackAmount = amount - promoteProduct.getQuantity();
-        } else {
-            lackAmount = amount - ((promoteProduct.getQuantity() / (buy + get)) * (buy + get));
-        }
-        return lackAmount;
+        return promotionGet;
     }
 }
