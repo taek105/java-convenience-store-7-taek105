@@ -1,31 +1,41 @@
 package store.model;
 
 public class PurchaseResult {
+    private int amount;
     private int payAmount;
-    private int purchasedAmount;
+    private int purchaseCount;
 
-    public PurchaseResult() {
+    public PurchaseResult(int amount) {
+        this.amount = amount;
         this.payAmount = 0;
-        this.purchasedAmount = 0;
+        this.purchaseCount = 0;
     }
 
     public int getPayAmount() {
         return payAmount;
     }
 
-    public int getPurchasedAmount() {
-        return purchasedAmount;
+    public int getPurchaseCount() {
+        return purchaseCount;
     }
 
-    public void plusPurchasedAmount() {
-        this.purchasedAmount ++;
+    public int getAmount() {
+        return amount;
+    }
+
+    public void incrementPurchaseCount() {
+        this.purchaseCount++;
     }
 
     public void addPayAmount(int amount) {
         this.payAmount += amount;
     }
 
-    public void addPurchaseAmount(int amount) {
-        this.purchasedAmount += amount;
+    public void addPurchaseCount(int amount) {
+        this.purchaseCount += amount;
+    }
+
+    public void subtractAmount(int amount) {
+        this.amount -= amount;
     }
 }
