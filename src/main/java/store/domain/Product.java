@@ -16,6 +16,13 @@ public class Product {
         this.promotion = validPromotion(promotion);
     }
 
+    public Product(String name, int price, int quantity, Promotion promotion) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.promotion = validPromotion(promotion);
+    }
+
     private Promotion validPromotion(Promotion promotion) {
         if ( promotion.isPromotionNow() )
             return promotion;

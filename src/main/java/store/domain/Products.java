@@ -17,6 +17,7 @@ public class Products {
     public Products(Promotions promotions) throws IOException {
         products = new ArrayList<>();
         readFile(promotions);
+        addNoQuantityProduct();
     }
 
     private void readFile(Promotions promotions) throws IOException {
@@ -26,6 +27,7 @@ public class Products {
         } catch (IOException e) {
             throw new IllegalArgumentException(ErrorMessage.NOT_VALID_FILE_ROUTE.getMessages());
         }
+
         parseFile(new BufferedReader(fr), promotions);
     }
 
@@ -49,9 +51,22 @@ public class Products {
                 promotions.getPromotion(split[Constant.PRODUCT_PROMOTION_INDEX.getValue()]));
     }
 
+    private void addNoQuantityProduct() {
+        List<Product> foundProducts = new ArrayList<>();
+        for ( Product product : products ) {
+            if ( product.isPromotion() ) {
+                if ( getProduct(product.getName(), false).isEmpty() ) {
+                    foundProducts.add(new Product(product.getName(), product.getPrice(), 0, Promotion.nullPromotion()));
+                }
+            }
+        }
+        products.addAll(foundProducts);
+    }
+
     public final Product getProduct(String name) {
-        if ( !getProduct(name, true).isEmpty() ) {
-            return getProduct(name, true);
+        Product result = getProduct(name, true);
+        if ( !result.isEmpty() ) {
+            return result;
         }
 
         return getProduct(name, false);
@@ -66,7 +81,7 @@ public class Products {
         return Product.emptyProduct();
     }
 
-    public List<Product> getProductsList() {
+    public final List<Product> getProductsList() {
         return Collections.unmodifiableList(products);
     }
 }
