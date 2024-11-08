@@ -1,8 +1,8 @@
 package store.service;
 
-import camp.nextstep.edu.missionutils.Console;
 import store.domain.Product;
 import store.domain.Products;
+import store.domain.Promotion;
 import store.model.PurchaseDTO;
 import store.view.InputView;
 
@@ -21,10 +21,8 @@ public class PromotionService {
 
     private void notifyLackPromotionQuantity(Product promoteProduct, PurchaseDTO purchaseDTO) {
         int lackAmount = getLackAmount(promoteProduct, purchaseDTO.getAmount());
-        InputView.notifyPromotionQuantity(promoteProduct.getName(), lackAmount);
-        String input = Console.readLine();
 
-        if (input.equals("N")) {
+        if ( !InputView.notifyPromotionQuantity(promoteProduct.getName(), lackAmount) ) {
             purchaseDTO.subtractAmount(lackAmount);
         }
     }
@@ -42,28 +40,32 @@ public class PromotionService {
     }
 
     public void askServeExtraProduct(Product promoteProduct, PurchaseDTO purchaseDTO) {
-        int extraProductAmount = ExtraProductAmount(purchaseDTO.getAmount(), promoteProduct);
+        int extraProductAmount = calculateExtraProductAmount(purchaseDTO.getAmount(), promoteProduct);
         if ( extraProductAmount > 0 ) {
-            InputView.notifyExtraProducts(promoteProduct.getName(), extraProductAmount);
-            String input = Console.readLine();
-
-            if ( input.equals("Y") ) {
+            if ( InputView.notifyExtraProducts(
+                    promoteProduct.getName(), extraProductAmount) ) {
                 purchaseDTO.addAmount(extraProductAmount);
             }
         }
     }
 
-    private int ExtraProductAmount(int amount, Product promoteProduct) {
-        for (int i = promoteProduct.getPromotion().getBuy(); i <= promoteProduct.getQuantity();
-             i += (promoteProduct.getPromotion().getBuy() + promoteProduct.getPromotion().getGet()) ) {
-            for ( int j = i; j < i+promoteProduct.getPromotion().getGet(); j ++ ) {
-                if ( amount == j ) {
-                    return Math.min(i+promoteProduct.getPromotion().getGet()-j, promoteProduct.getQuantity()-j);
-                }
+    private int calculateExtraProductAmount(int amount, Product promoteProduct) {
+        Promotion promotion = promoteProduct.getPromotion();
+        int buyQuantity = promotion.getBuy();
+        int freeQuantity = promotion.getGet();
+        int totalQuantity = promoteProduct.getQuantity();
+
+        while (amount >= buyQuantity && amount < totalQuantity) {
+            int nextBuyStart = buyQuantity + freeQuantity;
+            if (amount < nextBuyStart) {
+                return Math.min(nextBuyStart - amount, totalQuantity - amount);
             }
+            buyQuantity += nextBuyStart;
         }
+
         return 0;
     }
+
 
     public void promotionCheck(Product promoteProduct, PurchaseDTO purchaseDTO) {
         int purchaseCount = purchaseDTO.getPurchaseCount();

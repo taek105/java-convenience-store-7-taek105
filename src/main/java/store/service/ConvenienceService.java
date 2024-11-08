@@ -82,8 +82,6 @@ public class ConvenienceService {
 
     public void getReceipt() {
         OutputView.printReceipt(receipt);
-
-
     }
 
     private static void validate(int amount, Product promoteProduct, Product justProduct) {

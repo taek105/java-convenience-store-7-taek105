@@ -1,9 +1,7 @@
 package store.controller;
 
-import camp.nextstep.edu.missionutils.Console;
 import store.model.readProductDTO;
 import store.service.ConvenienceService;
-import store.service.InputHandler;
 import store.view.InputView;
 
 import java.io.IOException;
@@ -17,9 +15,18 @@ public class ConvenienceController {
     }
 
     public void Start() {
-        open();
-        purchase();
-        getReceipt();
+        boolean flag = true;
+        while ( flag ) {
+            open();
+            purchase();
+            getReceipt();
+            save();
+            flag = nextPurchase();
+        }
+    }
+
+    private boolean nextPurchase() {
+        return InputView.nextPurchase();
     }
 
     private void open() {
@@ -27,23 +34,31 @@ public class ConvenienceController {
     }
 
     private void purchase() {
-        InputView.readPurchaseProduct();
-        String input = Console.readLine();
-        List<readProductDTO> purchaseProductList = InputHandler.parsePurchaseInput(input);
-
-        for ( readProductDTO purchaseInfo : purchaseProductList) {
-            convenienceService.purchase(purchaseInfo.getName(), purchaseInfo.getAmount());
+        while (true) {
+            try {
+                List<readProductDTO> input = InputView.readPurchaseProduct();
+                purchaseList(input);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
         }
-        membership();
+
+        convenienceService.membership(InputView.membership());
     }
 
-    private void membership() {
-        InputView.membership();
-        String input = Console.readLine();
-        convenienceService.membership(InputHandler.parseMembershipFlag(input));
+    private void purchaseList(List<readProductDTO> input) {
+        for ( readProductDTO purchaseInfo : input) {
+            convenienceService.purchase(purchaseInfo.getName(), purchaseInfo.getAmount());
+        }
     }
 
     private void getReceipt() {
         convenienceService.getReceipt();
+    }
+
+
+    private void save() {
+
     }
 }
