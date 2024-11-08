@@ -20,7 +20,22 @@ public class InputHandler {
     }
 
     public static boolean parseMembershipFlag(String input) {
-        InputValidator.membershipFlagValidate(input);
+        InputValidator.flagValidate(input);
+        return input.equals("Y");
+    }
+
+    public static boolean parseNotifyPromotionQunatity(String input) {
+        InputValidator.flagValidate(input);
+        return input.equals("Y");
+    }
+
+    public static boolean parseNotifyExtraProducts(String input) {
+        InputValidator.flagValidate(input);
+        return input.equals("Y");
+    }
+
+    public static boolean parseNextPurchase(String input) {
+        InputValidator.flagValidate(input);
         return input.equals("Y");
     }
 }

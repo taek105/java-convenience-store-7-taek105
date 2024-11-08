@@ -22,7 +22,7 @@ public class InputValidator {
         }
     }
 
-    public static void membershipFlagValidate(String input) {
+    public static void flagValidate(String input) {
         if ( !input.matches("[YN]") ) {
             throw new IllegalArgumentException(ErrorMessage.NOT_VALID_INPUT.getMessages());
         }
