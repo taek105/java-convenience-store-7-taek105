@@ -13,7 +13,7 @@ public class ProductsTest {
     void 상품_찾기_테스트() {
         String name = "효택도시락";
 
-        Product found = products.getProduct(name);
+        Product found = products.getProduct(name, true);
 
         System.out.println(found.getName() + "/" + found.getPromotion().getName());
 

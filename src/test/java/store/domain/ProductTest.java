@@ -23,7 +23,7 @@ public class ProductTest {
         String name = "물";
         int amount = 2;
 
-        Product water = products.getProduct(name);
+        Product water = products.getProduct(name, false);
         System.out.println(water.getName());
         assertEquals(true, water.isSellable(amount));
     }
@@ -34,7 +34,7 @@ public class ProductTest {
 
         int amount = 11;
 
-        Product water = products.getProduct(name);
+        Product water = products.getProduct(name, false);
 
         assertEquals(false, water.isSellable(amount));
     }
@@ -44,7 +44,7 @@ public class ProductTest {
         String name = "물";
 
         int amount = 2;
-        Product water = products.getProduct(name);
+        Product water = products.getProduct(name, false);
 
         water.sold(amount);
 

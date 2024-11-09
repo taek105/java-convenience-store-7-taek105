@@ -1,18 +1,44 @@
 package store.model;
 
-public class PurchaseDTO {
-    private int amount;
-    private int promotedPrice;
-    private int purchaseCount;
-    private int extraAmount;
+import store.constant.ErrorMessage;
+import store.domain.Product;
+import store.domain.Promotion;
 
-    public PurchaseDTO(int amount) {
+public class PurchaseDTO {
+    Product promoteProduct;
+    Product justProduct;
+    private int amount;
+    private int promotedPrice = 0;
+    private int purchaseCount = 0;
+    private int extraAmount = 0;
+
+    public PurchaseDTO(Product promoteProduct, Product justProduct, int amount) {
+        this.promoteProduct = promoteProduct;
+        this.justProduct = justProduct;
         this.amount = amount;
-        this.promotedPrice = 0;
-        this.purchaseCount = 0;
-        this.extraAmount = 0;
+        validate(amount, promoteProduct, justProduct);
     }
 
+    private static void validate(int amount, Product promoteProduct, Product justProduct) {
+        if ( promoteProduct.isEmpty() && justProduct.isEmpty() ) {
+            throw new IllegalArgumentException(ErrorMessage.NOT_EXISTENCE_PRODUCT.getMessages());
+        }
+        if ( amount > promoteProduct.getQuantity() + justProduct.getQuantity() ) {
+            throw new IllegalArgumentException(ErrorMessage.EXCEED_QUANTITY.getMessages());
+        }
+    }
+
+    public Product getPromoteProduct() {
+        return promoteProduct;
+    }
+
+    public Product getJustProduct() {
+        return justProduct;
+    }
+
+    public Promotion getPromotion() {
+        return this.promoteProduct.getPromotion();
+    }
     public int getPromotedPrice() {
         return promotedPrice;
     }

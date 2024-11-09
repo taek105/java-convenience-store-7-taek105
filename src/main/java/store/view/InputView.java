@@ -20,7 +20,6 @@ public class InputView {
         }
     }
 
-
     public static boolean notifyExtraProducts(String productName, int promotionGet) {
         StringBuilder sb = new StringBuilder();
         sb.append("현재 ").append(productName).append("은(는) ").

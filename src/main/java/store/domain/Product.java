@@ -13,46 +13,14 @@ public class Product {
         this.name = name;
         this.price = Integer.parseInt(price);
         this.quantity = Integer.parseInt(quantity);
-        this.promotion = validPromotion(promotion);
+        this.promotion = promotion;
     }
 
     public Product(String name, int price, int quantity, Promotion promotion) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
-        this.promotion = validPromotion(promotion);
-    }
-
-    private Promotion validPromotion(Promotion promotion) {
-        if ( promotion.isPromotionNow() )
-            return promotion;
-        return Promotion.nullPromotion();
-    }
-
-    public boolean isEmpty() {
-        return this.price == Constant.EMPTY_PRODUCT_PRICE.getValue();
-    }
-
-    public boolean isPromotion() {
-        return promotion.isPromotion();
-    }
-
-    public boolean isSellable(int quantity) {
-        return this.quantity >= quantity;
-    }
-
-    public void sold(int quantity) {
-        if ( !isSellable(quantity) ) {
-            throw new IllegalArgumentException(ErrorMessage.EXCEED_QUANTITY.getMessages());
-        }
-        this.quantity -= quantity;
-    }
-
-    public static Product emptyProduct() {
-        return new Product("",
-                Integer.toString(Constant.EMPTY_PRODUCT_PRICE.getValue()),
-                "0",
-                Promotion.nullPromotion());
+        this.promotion = promotion;
     }
 
     public String getName() {
@@ -69,5 +37,35 @@ public class Product {
 
     public Promotion getPromotion() {
         return this.promotion;
+    }
+
+    public boolean isEmpty() {
+        return this.price == Constant.EMPTY_PRODUCT_PRICE.getValue();
+    }
+
+    public boolean isPromotion() {
+        return promotion.isEmpty();
+    }
+
+    public boolean isPromotionNow() {
+        return this.promotion.isPromotionNow();
+    }
+
+    public boolean isSellable(int quantity) {
+        return this.quantity >= quantity;
+    }
+
+    public void sold(int quantity) {
+        if ( !isSellable(quantity) ) {
+            throw new IllegalArgumentException(ErrorMessage.EXCEED_QUANTITY.getMessages());
+        }
+        this.quantity -= quantity;
+    }
+
+    public static Product nullProduct() {
+        return new Product("null",
+                Constant.EMPTY_PRODUCT_PRICE.getValue(),
+                Constant.EMPTY_PRODUCT_QUANTITY.getValue(),
+                Promotion.nullPromotion());
     }
 }

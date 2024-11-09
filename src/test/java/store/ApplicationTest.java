@@ -62,6 +62,14 @@ class ApplicationTest extends NsTest {
         });
     }
 
+    @Test
+    void 투쁠투_구매_테스트() {
+        assertSimpleTest(() -> {
+            runException("[효택도시락-3]", "N", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("내실돈10,000");
+        });
+    }
+
     @Override
     public void runMain() {
         try {

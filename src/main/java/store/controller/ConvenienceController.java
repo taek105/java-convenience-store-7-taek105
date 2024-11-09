@@ -25,10 +25,6 @@ public class ConvenienceController {
         }
     }
 
-    private boolean nextPurchase() {
-        return InputView.nextPurchase();
-    }
-
     private void open() {
         convenienceService.open();
     }
@@ -36,18 +32,17 @@ public class ConvenienceController {
     private void purchase() {
         while (true) {
             try {
-                List<readProductDTO> input = InputView.readPurchaseProduct();
-                purchaseList(input);
+                convenienceService.init();
+                purchaseList(InputView.readPurchaseProduct());
                 break;
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
-
         convenienceService.membership(InputView.membership());
     }
 
-    private void purchaseList(List<readProductDTO> input) {
+    private void purchaseList(List<readProductDTO> input) throws IOException {
         for ( readProductDTO purchaseInfo : input) {
             convenienceService.purchase(purchaseInfo.getName(), purchaseInfo.getAmount());
         }
@@ -57,8 +52,11 @@ public class ConvenienceController {
         convenienceService.getReceipt();
     }
 
-
     private void save() {
+        convenienceService.save();
+    }
 
+    private boolean nextPurchase() {
+        return InputView.nextPurchase();
     }
 }

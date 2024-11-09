@@ -22,13 +22,12 @@ public class Promotion {
         this.endDate = parseLocalDateTime(endDate);
     }
 
-    private LocalDateTime parseLocalDateTime(String startDate) {
-        String[] parts = startDate.split("-");
-        return LocalDateTime.of(Integer.parseInt(parts[Constant.YEAR_INDEX.getValue()]),
-                Month.of(Integer.parseInt(parts[Constant.MONTH_INDEX.getValue()])),
-                Integer.parseInt(parts[Constant.DAY_INDEX.getValue()]),
-                0,
-                0);
+    public Promotion(String name, int buy, int get, LocalDateTime startDate, LocalDateTime endDate) {
+        this.name = name;
+        this.buy = buy;
+        this.get = get;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public String getName() {
@@ -45,14 +44,33 @@ public class Promotion {
 
     public boolean isPromotionNow() {
         LocalDateTime now = DateTimes.now();
-        return now.isAfter(startDate) && now.isBefore(endDate);
-    }
-
-    public boolean isPromotion() {
-        return !(this.name.equals("null") && this.buy == 0 && this.get == 0);
+        return ((!now.isBefore(startDate)) && now.isBefore(endDate));
     }
 
     public static Promotion nullPromotion() {
-        return new Promotion("null", "0", "0", "0-1-1", "0-1-1");
+        return new Promotion( "null"
+                ,Constant.PROMOTION_NULL_BUY.getValue()
+                ,Constant.PROMOTION_NULL_GET.getValue()
+                ,getNullDate()
+                ,getNullDate());
+    }
+
+    public boolean isEmpty() {
+        return !( this.name.equals("null")
+                && this.buy == Constant.PROMOTION_NULL_BUY.getValue()
+                && this.get == Constant.PROMOTION_NULL_GET.getValue());
+    }
+
+    private static LocalDateTime parseLocalDateTime(String startDate) {
+        String[] parts = startDate.split("-");
+        return LocalDateTime.of(Integer.parseInt(parts[Constant.YEAR_INDEX.getValue()]),
+                Month.of(Integer.parseInt(parts[Constant.MONTH_INDEX.getValue()])),
+                Integer.parseInt(parts[Constant.DAY_INDEX.getValue()]),
+                0,
+                0);
+    }
+
+    private static LocalDateTime getNullDate() {
+        return parseLocalDateTime("0-1-1");
     }
 }

@@ -1,17 +1,13 @@
 package store.service;
 
 import org.junit.jupiter.api.Test;
-import store.domain.Product;
-import store.domain.Products;
-import store.domain.Promotions;
-import store.model.PurchaseDTO;
+import store.HtTest;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class ConvenienceServiceTest {
-    Products products = new Products(new Promotions());
+public class ConvenienceServiceTest extends HtTest {
     ConvenienceService convenienceService = new ConvenienceService();
 
     public ConvenienceServiceTest() throws IOException {}
@@ -21,12 +17,13 @@ public class ConvenienceServiceTest {
         String productName = "효택도시락";
         int amount = 4;
 
-        Product found = products.getProduct(productName, true);
+        convenienceService.purchase(productName, amount);
 
-        PurchaseDTO res = convenienceService.purchase(productName, amount);
-
-        assertEquals(found.getPrice()*2, res.getPromotedPrice());
-        assertEquals(amount, res.getAmount());
+        convenienceService.getReceipt();
+        assertThat(output()).contains(
+                "효택도시락     \t   4\t    20,000",
+                "내실돈       \t\t     10,000"
+        );
     }
 
     @Test
@@ -34,11 +31,12 @@ public class ConvenienceServiceTest {
         String productName = "탄산수";
         int amount = 3;
 
-        Product found = products.getProduct(productName, true);
+        convenienceService.purchase(productName, amount);
 
-        PurchaseDTO res = convenienceService.purchase(productName, amount);
-
-        assertEquals(found.getPrice()*2, res.getPromotedPrice());
-        assertEquals(amount, res.getAmount());
+        convenienceService.getReceipt();
+        assertThat(output()).contains(
+                "탄산수       \t   3\t     3,600",
+                "내실돈       \t\t      2,400"
+        );
     }
 }

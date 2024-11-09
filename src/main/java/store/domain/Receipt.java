@@ -1,4 +1,7 @@
-package store.model;
+package store.domain;
+
+import store.constant.Constant;
+import store.model.PurchaseResult;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,12 +9,11 @@ import java.util.List;
 
 public class Receipt {
     private final List<PurchaseResult> purchaseResults;
-    private int promotedPrice;
+    private int promotedPrice = 0;
     private boolean membership;
 
     public Receipt() {
         purchaseResults = new ArrayList<>();
-        this.promotedPrice = 0;
         this.membership = false;
     }
 
@@ -35,10 +37,10 @@ public class Receipt {
     public double getMembershipKeep() {
         double keep = 0;
         if ( this.membership ) {
-            keep = promotedPrice * 0.3;
+            keep = promotedPrice * (Constant.MEMBERSHIP_RATE.getValue()/100.0);
         }
-        if ( keep > 8000 ) {
-            keep = 8000;
+        if ( keep > Constant.MEMBERSHIP_LIMIT.getValue() ) {
+            keep = Constant.MEMBERSHIP_LIMIT.getValue();
         }
         return keep;
     }

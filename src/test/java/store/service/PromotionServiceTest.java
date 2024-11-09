@@ -24,11 +24,12 @@ public class PromotionServiceTest {
         String name = "효택도시락2";
         int amount = 8;
 
-        PurchaseDTO purchaseDTO = new PurchaseDTO(amount);
+        PurchaseDTO purchaseDTO = new PurchaseDTO(
+                products.getProduct(name, true),
+                products.getProduct(name, false),
+                amount);
 
-        Product found = products.getProduct(name, true);
-
-        promotionService.promotionQuantityCheck(found, purchaseDTO);
+        promotionService.promotionQuantityCheck(purchaseDTO);
 
         assertEquals(amount, purchaseDTO.getAmount());
     }
@@ -40,10 +41,13 @@ public class PromotionServiceTest {
         String name = "효택소세지";
         int amount = 10;
 
-        Product found = products.getProduct(name, true);
-        PurchaseDTO purchaseDTO = new PurchaseDTO(amount);
+        PurchaseDTO purchaseDTO = new PurchaseDTO(
+                products.getProduct(name, true),
+                products.getProduct(name, false),
+                amount);
+        promotionService.askServeExtraProduct(purchaseDTO);
 
-        promotionService.askServeExtraProduct(found, purchaseDTO);
+        Product found = products.getProduct(name, true);
 
         assertEquals(found.getQuantity(), purchaseDTO.getAmount());
     }
@@ -55,10 +59,12 @@ public class PromotionServiceTest {
         String name = "사이다";
         int amount = 5;
 
-        Product found = products.getProduct(name, true);
-        PurchaseDTO purchaseDTO = new PurchaseDTO(amount);
+        PurchaseDTO purchaseDTO = new PurchaseDTO(
+                products.getProduct(name, true),
+                products.getProduct(name, false),
+                amount);
 
-        promotionService.askServeExtraProduct(found, purchaseDTO);
+        promotionService.askServeExtraProduct(purchaseDTO);
         assertEquals(6, purchaseDTO.getAmount());
     }
 
@@ -67,10 +73,12 @@ public class PromotionServiceTest {
         String name = "사이다";
         int amount = 4;
 
-        Product found = products.getProduct(name, true);
-        PurchaseDTO purchaseDTO = new PurchaseDTO(amount);
+        PurchaseDTO purchaseDTO = new PurchaseDTO(
+                products.getProduct(name, true),
+                products.getProduct(name, false),
+                amount);
 
-        promotionService.askServeExtraProduct(found, purchaseDTO);
+        promotionService.askServeExtraProduct(purchaseDTO);
 
         assertEquals(amount, purchaseDTO.getAmount());
     }

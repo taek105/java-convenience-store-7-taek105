@@ -3,7 +3,7 @@ package store.view;
 import store.domain.Product;
 import store.domain.Products;
 import store.model.PurchaseResult;
-import store.model.Receipt;
+import store.domain.Receipt;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -46,7 +46,8 @@ public class OutputView {
             sb.append(String.format("%-10s\t%4d\t%10s\n",
                     purchaseResult.getName(),
                     purchaseResult.getAmount(),
-                    formatter.format(purchaseResult.getPromotedPrice())));
+                    formatter.format(
+                            purchaseResult.getPromotedPrice()+receipt.getPromotionKeep() )));
         }
 
         sb.append("=============증\t정===============\n");

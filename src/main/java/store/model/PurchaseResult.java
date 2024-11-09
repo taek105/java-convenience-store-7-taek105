@@ -6,11 +6,11 @@ public class PurchaseResult {
     private final int extraAmount;
     private final int promotedPrice;
 
-    public PurchaseResult(String name, int amount, int extraAmount, int promotedPrice) {
+    public PurchaseResult(String name, PurchaseDTO purchaseDTO) {
         this.name = name;
-        this.amount = amount;
-        this.extraAmount = extraAmount;
-        this.promotedPrice = promotedPrice;
+        this.amount = purchaseDTO.getAmount();
+        this.extraAmount = purchaseDTO.getExtraAmount();
+        this.promotedPrice = purchaseDTO.getPromotedPrice();
     }
 
     public String getName() {
