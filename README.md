@@ -1,8 +1,15 @@
-# java-convenience-store-precourse
+# 프리코스 4주차 - W편의점
+![Generic badge](https://img.shields.io/badge/version-1.0.0-brightgreen.svg)
+![Generic badge](https://img.shields.io/badge/java-21-blue.svg)
+![Generic badge](https://img.shields.io/badge/precourse-week4-red.svg)
+> 프로모션이 적용된 상품 구매를 할 수 있는 간단한 편의점 서비스입니다.
 --- 
 > 패키지 구조
 <p align="center">
-    <img src="img/package.png" alt="package.png" width="350px">
+    <img src="img/package_main.png" alt="package.png" width="350px">
+</p>
+<p align="center">
+    <img src="img/package_test.png" alt="package.png" width="350px">
 </p>
 
 ## 제약 조건
@@ -22,7 +29,7 @@
 
 3. 편의점 서비스
 - [x] 프로모션 재고 내에서만 적용 가능, 프로모션 재고가 부족할 때 일반 재고 사용
-- [x] 프로모션이 적용 가능해서 공짜로 받을지 말지 물어보기 
+- [x] 프로모션이 적용 가능해서 공짜로 받을지 말지 물어보기
 - [x] 프로모션 재고가 부족하여 일부 수량을 프로모션 혜택 없이 살지 물어보기
 - [x] 멤버십 할인
   - [x] 프로모션 미적용? 금액의 30% 할인
@@ -200,9 +207,3 @@ Y
 N
 ```
 
----
-
-## 실행 결과 예시
-<p align="center">
-    <img src="img/convenienceResult.png" alt="convenienceResult.png" width="500px">
-</p>
