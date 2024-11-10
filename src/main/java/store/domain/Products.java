@@ -58,9 +58,7 @@ public class Products {
         String[] split = line.split(",");
         parseProductValidate(split);
 
-        return new Product(split[Constant.PRODUCT_NAME_INDEX.getValue()],
-                        (split[Constant.PRODUCT_PRICE_INDEX.getValue()]),
-                        (split[Constant.PRODUCT_QUANTITY_INDEX.getValue()]),
+        return new Product(split,
                 promotions.getPromotion(split[Constant.PRODUCT_PROMOTION_INDEX.getValue()]));
     }
 

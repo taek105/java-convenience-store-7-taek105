@@ -13,13 +13,12 @@ public class Promotion {
     private final LocalDateTime startDate;
     private final LocalDateTime endDate;
 
-    public Promotion(String name, String buy, String get,
-                     String startDate, String endDate) {
-        this.name = name;
-        this.buy = Integer.parseInt(buy);
-        this.get = Integer.parseInt(get);
-        this.startDate = parseLocalDateTime(startDate);
-        this.endDate = parseLocalDateTime(endDate);
+    public Promotion(String[] split) {
+        this.name = split[Constant.PROMOTION_NAME_INDEX.getValue()];
+        this.buy = Integer.parseInt(split[Constant.PROMOTION_BUY_INDEX.getValue()]);
+        this.get = Integer.parseInt(split[Constant.PROMOTION_GET_INDEX.getValue()]);
+        this.startDate = parseLocalDateTime(split[Constant.PROMOTION_START_DATE_INDEX.getValue()]);
+        this.endDate = parseLocalDateTime(split[Constant.PROMOTION_END_DATE_INDEX.getValue()]);
     }
 
     public Promotion(String name, int buy, int get, LocalDateTime startDate, LocalDateTime endDate) {

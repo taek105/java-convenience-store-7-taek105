@@ -9,10 +9,10 @@ public class Product {
     private int quantity;
     private final Promotion promotion;
 
-    public Product(String name, String price, String quantity, Promotion promotion) {
-        this.name = name;
-        this.price = Integer.parseInt(price);
-        this.quantity = Integer.parseInt(quantity);
+    public Product(String[] split, Promotion promotion) {
+        this.name = split[Constant.PRODUCT_NAME_INDEX.getValue()];
+        this.price = Integer.parseInt(split[Constant.PRODUCT_PRICE_INDEX.getValue()]);
+        this.quantity = Integer.parseInt(split[Constant.PRODUCT_QUANTITY_INDEX.getValue()]);
         this.promotion = promotion;
     }
 

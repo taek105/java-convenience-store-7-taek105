@@ -52,14 +52,14 @@ public class Promotions {
 
     private Promotion parsePromotion(String line) {
         String[] split = line.split(",");
+        parsePromotionValidate(split);
+
+        return new Promotion(split);
+    }
+
+    private static void parsePromotionValidate(String[] split) {
         if ( split.length-1 != Constant.PROMOTION_END_DATE_INDEX.getValue() ) {
             throw new IllegalArgumentException(ErrorMessage.NOT_VALID_FILE_FORMAT.getMessages());
         }
-
-        return new Promotion(split[Constant.PROMOTION_NAME_INDEX.getValue()],
-                (split[Constant.PROMOTION_BUY_INDEX.getValue()]),
-                (split[Constant.PROMOTION_GET_INDEX.getValue()]),
-                (split[Constant.PROMOTION_START_DATE_INDEX.getValue()]),
-                (split[Constant.PROMOTION_END_DATE_INDEX.getValue()]));
     }
 }

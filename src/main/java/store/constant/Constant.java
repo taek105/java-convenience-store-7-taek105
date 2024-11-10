@@ -19,7 +19,9 @@ public enum Constant {
     MONTH_INDEX(1),
     DAY_INDEX(2),
     MEMBERSHIP_LIMIT(8000),
-    MEMBERSHIP_RATE(30);
+    MEMBERSHIP_RATE(30),
+    INPUT_FORMAT_INDEX(1),
+    INPUT_FORMAT_LENGTH(2);
 
     private final int value;
 
