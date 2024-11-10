@@ -1,6 +1,9 @@
 package store.service;
 
+import store.constant.Constant;
 import store.constant.ErrorMessage;
+
+import static store.service.InputHandler.subFormatting;
 
 public class InputValidator {
     public static void purchaseInputValidate(String input) {
@@ -11,9 +14,9 @@ public class InputValidator {
             throw new IllegalArgumentException(ErrorMessage.NOT_VALID_INPUT.getMessages());
         }
 
-        input = input.substring(1, input.length() - 1);
+        input = subFormatting(input);
         String[] splitByDash = input.split("-");
-        if ( splitByDash.length != 2 ) {
+        if ( splitByDash.length != Constant.INPUT_FORMAT_LENGTH.getValue() ) {
             throw new IllegalArgumentException(ErrorMessage.NOT_VALID_INPUT.getMessages());
         }
 

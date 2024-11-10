@@ -14,32 +14,53 @@ public class OutputView {
     }
 
     public static void printProducts(Products products) {
-        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.KOREA);
-
         for ( Product product : products.getProductsList() ) {
-            StringBuilder sb = new StringBuilder("- ");
-            sb.append(product.getName()).append(" ").
-                    append(formatter.format(product.getPrice())).append("원 ");
-
-            if ( product.getQuantity() > 0 ) {
-                sb.append(product.getQuantity()).append("개 ");
-            }
-            else {
-                sb.append("재고 없음");
-            }
-
-            if ( product.isPromotion() ) {
-                sb.append(product.getPromotion().getName());
-            }
+            StringBuilder sb = new StringBuilder("- ").append(product.getName()).append(" ");
+            
+            appendPrice(product, sb);
+            appendQuantity(product, sb);
+            appendPromotion(product, sb);
+            
             System.out.println(sb);
         }
     }
 
     public static void printReceipt(Receipt receipt) {
-        int totalAmount = 0;
+        StringBuilder sb = new StringBuilder();
+
+        int totalAmount = appendPurchaseProduct(receipt, sb);
+        appendExtraProduct(receipt, sb);
+        appendReceipt(receipt, sb, totalAmount);
+
+        System.out.println(sb);
+    }
+
+    private static void appendPrice(Product product, StringBuilder sb) {
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.KOREA);
 
-        StringBuilder sb = new StringBuilder("==============W 편의점================\n");
+        sb.append(formatter.format(product.getPrice())).append("원 ");
+    }
+
+    private static void appendQuantity(Product product, StringBuilder sb) {
+        if ( product.getQuantity() > 0 ) {
+            sb.append(product.getQuantity()).append("개 ");
+        }
+        else {
+            sb.append("재고 없음");
+        }
+    }
+
+    private static void appendPromotion(Product product, StringBuilder sb) {
+        if ( product.isPromotion() ) {
+            sb.append(product.getPromotion().getName());
+        }
+    }
+
+    private static int appendPurchaseProduct(Receipt receipt, StringBuilder sb) {
+        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.KOREA);
+
+        int totalAmount = 0;
+        sb.append("==============W 편의점================\n");
         sb.append(String.format("%-10s\t%4s\t%10s\n", "상품명", "수량", "금액"));
         for (PurchaseResult purchaseResult : receipt.getPurchaseResults()) {
             totalAmount += purchaseResult.getAmount();
@@ -47,17 +68,14 @@ public class OutputView {
                     purchaseResult.getName(),
                     purchaseResult.getAmount(),
                     formatter.format(
-                            purchaseResult.getPromotedPrice()+receipt.getPromotionKeep() )));
+                            purchaseResult.getPromotedPrice()+receipt.getPromotionKeep())
+            ));
         }
+        return totalAmount;
+    }
 
-        sb.append("=============증\t정===============\n");
-        for (PurchaseResult purchaseResult : receipt.getPurchaseResults()) {
-            if (purchaseResult.getExtraAmount() > 0) {
-                sb.append(String.format("%-10s\t%4d\n",
-                        purchaseResult.getName(),
-                        purchaseResult.getExtraAmount()));
-            }
-        }
+    private static void appendReceipt(Receipt receipt, StringBuilder sb, int totalAmount) {
+        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.KOREA);
 
         sb.append("====================================\n");
         sb.append(String.format("%-10s\t%4d\t%10s\n", "총구매액", totalAmount,
@@ -68,7 +86,16 @@ public class OutputView {
                 formatter.format(receipt.getMembershipKeep())));
         sb.append(String.format("%-10s\t\t %10s\n", "내실돈",
                 formatter.format(receipt.getPromotedPrice() - receipt.getMembershipKeep())));
+    }
 
-        System.out.println(sb);
+    private static void appendExtraProduct(Receipt receipt, StringBuilder sb) {
+        sb.append("=============증\t정===============\n");
+        for (PurchaseResult purchaseResult : receipt.getPurchaseResults()) {
+            if (purchaseResult.getExtraAmount() > 0) {
+                sb.append(String.format("%-10s\t%4d\n",
+                        purchaseResult.getName(),
+                        purchaseResult.getExtraAmount()));
+            }
+        }
     }
 }
