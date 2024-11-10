@@ -56,12 +56,16 @@ public class ConvenienceService {
     public void save() {
         StringBuilder sb = new StringBuilder("name,price,quantity,promotion\n");
         for ( Product product : products.getProductsList() ) {
-            sb.append(product.getName()).append(',');
-            sb.append(product.getPrice()).append(',');
-            sb.append(product.getQuantity()).append(',');
-            sb.append(product.getPromotion().getName()).append('\n');
+            appendProductInfo(product, sb);
         }
         saveAtProductsMd(sb);
+    }
+
+    private static void appendProductInfo(Product product, StringBuilder sb) {
+        sb.append(product.getName()).append(',');
+        sb.append(product.getPrice()).append(',');
+        sb.append(product.getQuantity()).append(',');
+        sb.append(product.getPromotion().getName()).append('\n');
     }
 
     private void purchaseProduct(PurchaseDTO purchaseDTO) {
@@ -73,7 +77,6 @@ public class ConvenienceService {
         if ( purchaseDTO.getPromoteProduct().isEmpty() ) {
             return;
         }
-
         if ( purchaseDTO.getPromoteProduct().isPromotionNow() ) {
             beforePromoteProductPurchase(purchaseDTO);
             promoteProductPurchaseLogic(purchaseDTO);
