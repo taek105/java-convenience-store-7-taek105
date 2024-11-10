@@ -10,8 +10,12 @@ import java.util.List;
 public class ConvenienceController {
     ConvenienceService convenienceService;
 
-    public ConvenienceController() throws IOException {
-        convenienceService = new ConvenienceService();
+    public ConvenienceController() {
+        try {
+            convenienceService = new ConvenienceService();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void Start() {

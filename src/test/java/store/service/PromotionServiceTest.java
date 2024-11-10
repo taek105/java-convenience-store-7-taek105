@@ -1,5 +1,7 @@
 package store.service;
 
+import camp.nextstep.edu.missionutils.Console;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import store.domain.Product;
 import store.domain.Products;
@@ -16,6 +18,11 @@ public class PromotionServiceTest {
     PromotionService promotionService = new PromotionService(products);
 
     public PromotionServiceTest() throws IOException {}
+
+    @BeforeEach
+    void beforeEach() {
+        Console.close();
+    }
 
     @Test
     void 투쁠투_프로모션_재고_초과_정가구매_Y_테스트() {
