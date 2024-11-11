@@ -1,8 +1,8 @@
 package store.domain;
 
-import store.constant.Constant;
 import store.constant.ErrorMessage;
 import store.constant.FilePath;
+import store.constant.ProductConstant;
 import store.util.Util;
 
 import java.io.BufferedReader;
@@ -15,7 +15,7 @@ import java.util.List;
 public class Products {
     private final List<Product> products;
 
-    public Products(Promotions promotions) throws IOException {
+    public Products(Promotions promotions) {
         products = new ArrayList<>();
         readFile(promotions);
         // 프로모션 상품이 있는데 프로모션이 없는 상품이 파일에 없을 때 더미 상품을 추가합니다
@@ -35,7 +35,7 @@ public class Products {
         return Collections.unmodifiableList(products);
     }
 
-    private void readFile(Promotions promotions) throws IOException {
+    private void readFile(Promotions promotions) {
         FileReader fr;
         try {
             fr = new FileReader(FilePath.PRODUCT_MD.getValue());
@@ -46,11 +46,15 @@ public class Products {
         parseFile(new BufferedReader(fr), promotions);
     }
 
-    private void parseFile(BufferedReader br, Promotions promotions) throws IOException {
-        Util.skipFirstLine(br);
-        String line;
-        while ( (line = br.readLine()) != null ) {
-            products.add(parseProduct(line, promotions));
+    private void parseFile(BufferedReader br, Promotions promotions) {
+        try {
+            Util.skipFirstLine(br);
+            String line;
+            while ( (line = br.readLine()) != null ) {
+                products.add(parseProduct(line, promotions));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -59,11 +63,11 @@ public class Products {
         parseProductValidate(split);
 
         return new Product(split,
-                promotions.getPromotion(split[Constant.PRODUCT_PROMOTION_INDEX.getValue()]));
+                promotions.getPromotion(split[ProductConstant.PRODUCT_PROMOTION_INDEX.getValue()]));
     }
 
     private static void parseProductValidate(String[] split) {
-        if ( split.length-1 != Constant.PRODUCT_PROMOTION_INDEX.getValue() ) {
+        if ( split.length-1 != ProductConstant.PRODUCT_PROMOTION_INDEX.getValue() ) {
             throw new IllegalArgumentException(ErrorMessage.NOT_VALID_FILE_FORMAT.getMessages());
         }
     }
@@ -82,7 +86,7 @@ public class Products {
             if ( getProduct(product.getName(), false).isEmpty() ) {
                 foundProducts.add(new Product(product.getName(),
                         product.getPrice(),
-                        0,
+                        ProductConstant.DUMMY_PRODUCT_QUANTITY.getValue(),
                         Promotion.nullPromotion()));
             }
         }

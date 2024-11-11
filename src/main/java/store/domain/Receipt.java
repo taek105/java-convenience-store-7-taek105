@@ -1,6 +1,6 @@
 package store.domain;
 
-import store.constant.Constant;
+import store.constant.MembershipConstant;
 import store.model.PurchaseResult;
 
 import java.util.ArrayList;
@@ -37,10 +37,10 @@ public class Receipt {
     public double getMembershipKeep() {
         double keep = 0;
         if ( this.membership ) {
-            keep = promotedPrice * (Constant.MEMBERSHIP_RATE.getValue()/100.0);
+            keep = promotedPrice * (MembershipConstant.MEMBERSHIP_RATE.getValue()/100.0);
         }
-        if ( keep > Constant.MEMBERSHIP_LIMIT.getValue() ) {
-            keep = Constant.MEMBERSHIP_LIMIT.getValue();
+        if ( keep > MembershipConstant.MEMBERSHIP_LIMIT.getValue() ) {
+            keep = MembershipConstant.MEMBERSHIP_LIMIT.getValue();
         }
         return keep;
     }

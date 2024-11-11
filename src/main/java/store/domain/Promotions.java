@@ -1,6 +1,6 @@
 package store.domain;
 
-import store.constant.Constant;
+import store.constant.PromotionConstant;
 import store.constant.ErrorMessage;
 import store.constant.FilePath;
 import store.util.Util;
@@ -20,7 +20,7 @@ public class Promotions {
     }
 
     public Promotion getPromotion(String promotionName) {
-        if ( promotionName.equals("null") ) {
+        if ( promotionName.equals(PromotionConstant.NULL_PROMOTION_NAME.getStringValue()) ) {
             return Promotion.nullPromotion();
         }
 
@@ -58,7 +58,7 @@ public class Promotions {
     }
 
     private static void parsePromotionValidate(String[] split) {
-        if ( split.length-1 != Constant.PROMOTION_END_DATE_INDEX.getValue() ) {
+        if ( split.length-1 != PromotionConstant.PROMOTION_END_DATE_INDEX.getValue() ) {
             throw new IllegalArgumentException(ErrorMessage.NOT_VALID_FILE_FORMAT.getMessages());
         }
     }

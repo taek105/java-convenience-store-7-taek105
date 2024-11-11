@@ -1,7 +1,7 @@
 package store.domain;
 
-import store.constant.Constant;
 import store.constant.ErrorMessage;
+import store.constant.ProductConstant;
 
 public class Product {
     private final String name;
@@ -10,9 +10,9 @@ public class Product {
     private final Promotion promotion;
 
     public Product(String[] split, Promotion promotion) {
-        this.name = split[Constant.PRODUCT_NAME_INDEX.getValue()];
-        this.price = Integer.parseInt(split[Constant.PRODUCT_PRICE_INDEX.getValue()]);
-        this.quantity = Integer.parseInt(split[Constant.PRODUCT_QUANTITY_INDEX.getValue()]);
+        this.name = split[ProductConstant.PRODUCT_NAME_INDEX.getValue()];
+        this.price = Integer.parseInt(split[ProductConstant.PRODUCT_PRICE_INDEX.getValue()]);
+        this.quantity = Integer.parseInt(split[ProductConstant.PRODUCT_QUANTITY_INDEX.getValue()]);
         this.promotion = promotion;
     }
 
@@ -40,7 +40,7 @@ public class Product {
     }
 
     public boolean isEmpty() {
-        return this.price == Constant.EMPTY_PRODUCT_PRICE.getValue();
+        return this.price == ProductConstant.EMPTY_PRODUCT_PRICE.getValue();
     }
 
     public boolean isPromotion() {
@@ -63,9 +63,9 @@ public class Product {
     }
 
     public static Product nullProduct() {
-        return new Product("null",
-                Constant.EMPTY_PRODUCT_PRICE.getValue(),
-                Constant.EMPTY_PRODUCT_QUANTITY.getValue(),
+        return new Product(ProductConstant.NULL_PRODUCT_NAME.getStringValue(),
+                ProductConstant.EMPTY_PRODUCT_PRICE.getValue(),
+                ProductConstant.EMPTY_PRODUCT_QUANTITY.getValue(),
                 Promotion.nullPromotion());
     }
 }
