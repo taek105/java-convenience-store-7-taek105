@@ -1,6 +1,6 @@
 package store.controller;
 
-import store.model.readProductDTO;
+import store.model.ReadProductDTO;
 import store.service.ConvenienceService;
 import store.view.InputView;
 
@@ -46,8 +46,8 @@ public class ConvenienceController {
         convenienceService.membership(InputView.membership());
     }
 
-    private void purchaseList(List<readProductDTO> input) throws IOException {
-        for ( readProductDTO purchaseInfo : input) {
+    private void purchaseList(List<ReadProductDTO> input) throws IOException {
+        for ( ReadProductDTO purchaseInfo : input) {
             convenienceService.purchase(purchaseInfo.getName(), purchaseInfo.getAmount());
         }
     }

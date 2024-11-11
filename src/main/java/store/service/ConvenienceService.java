@@ -61,13 +61,6 @@ public class ConvenienceService {
         saveAtProductsMd(sb);
     }
 
-    private static void appendProductInfo(Product product, StringBuilder sb) {
-        sb.append(product.getName()).append(',');
-        sb.append(product.getPrice()).append(',');
-        sb.append(product.getQuantity()).append(',');
-        sb.append(product.getPromotion().getName()).append('\n');
-    }
-
     private void purchaseProduct(PurchaseDTO purchaseDTO) {
         promoteProductPurchase(purchaseDTO);
         justProductPurchase(purchaseDTO);
@@ -119,6 +112,13 @@ public class ConvenienceService {
             purchaseDTO.addPayAmount(justProduct.getPrice());
         }
         justProduct.sold(amount);
+    }
+
+    private static void appendProductInfo(Product product, StringBuilder sb) {
+        sb.append(product.getName()).append(',');
+        sb.append(product.getPrice()).append(',');
+        sb.append(product.getQuantity()).append(',');
+        sb.append(product.getPromotion().getName()).append('\n');
     }
 
     private static void saveAtProductsMd(StringBuilder sb) {

@@ -45,10 +45,11 @@ public class ProductTest {
 
         int amount = 2;
         Product water = products.getProduct(name, false);
+        int getQuantity = water.getQuantity();
 
         water.sold(amount);
 
-        assertEquals(8, water.getQuantity());
+        assertEquals(getQuantity-amount, water.getQuantity());
     }
 
 }
